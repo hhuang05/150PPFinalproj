@@ -1,13 +1,23 @@
 ; Author: Moses Huang
 ; Problem 1: Linear Regression
+(load "linearalg.js")
+(load "common.church")
+
 (define data (read-csv "problem-1-data.csv" ","))
-(define A (read-csv "sigmainv.csv" ","))
+
+(define sigma1 (matrix_identity 5))
+
 (define mu 
-  (list
-   (gaussian 0 2)
-   (gaussian 0 2)
-   (gaussian 0 2)
-   (gaussian 0 2)
-   (gaussian 0 2)))
-A
+  (list (gaussian 0 2) (gaussian 0 2) 
+	(gaussian 0 2) (gaussian 0 2) (gaussian 0 2)))
+
+(define sigma2 (matrix_identity 5))
+
+(matrix_multbyScalar sigma1 2)
+(define U (wishart_std sigma2))
+
+(define sigma_prior 
+  (matrix_invert (matrix_mult (transpose U) U)))
+
+sigma_prior
 

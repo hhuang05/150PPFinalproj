@@ -1,0 +1,43 @@
+; Author Moses Huang
+; Helper functions 
+
+(define (matrix_multbyScalar M y) 
+  (define (multListScalar lst x)
+    (map (lambda (y) (* x y)) lst))
+  (map (lambda (x) (multListScalar x y)) M))
+
+(define (chi_square ddof) 
+  (define (chi_sq_help n)
+    (if (= n 1) 
+	(pow (gaussian 0 1) 2)
+	(+ (pow (gaussian 0 1) 2) (chi_sq_help (- n 1)))))
+  (chi_sq_help ddof))
+
+(define (wishart_std M)
+  ; list -> list
+  ; The list has to be an identity matrix
+  (define (buildWishartRow lst oneSeen result)
+    ; buildWishartRow :: list -> boolean -> list -> list
+    (if (null? lst) 
+	result
+	(if oneSeen
+	    (buildWishartRow (cdr lst) 
+			     oneSeen 
+			     (append result 
+				     (list (gaussian 0 1))))
+	    (if (= (car lst) 1)
+		(buildWishartRow (cdr lst) 
+				 true 
+				 (append result 
+					 (list  
+					  (sqrt 
+					   (chi_square
+					    (+ (length result) 1))))))
+		(buildWishartRow (cdr lst) 
+				 oneSeen 
+				 (append result '(0))))
+	    )
+	)
+    )
+  (map (lambda (x) (buildWishartRow x false '())) 
+       M))
