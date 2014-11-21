@@ -1,0 +1,19 @@
+; Author Moses Huang
+; Helper functions specifically for problem 1
+
+; TODO
+; Can try to abstract these to make it more general
+(define (genData rows cols)
+  (define (makeRow n)
+    (if (= n 1)
+	(list (uniform -1 1))
+	(cons (uniform -1 1) (makeRow (- n 1)))))
+  (if (= rows 1)
+      (list (makeRow cols))
+      (cons (makeRow cols) (genData (- rows 1) cols))))
+
+(define (genEpsilon rows tau)
+  (if (= rows 1)
+      (list (gaussian 0 (/ 1 tau)))
+      (cons (gaussian 0 (/ 1 tau)) (genEpsilon (- rows 1) tau))))
+

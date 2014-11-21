@@ -2,22 +2,32 @@
 ; Problem 1: Linear Regression
 (load "linearalg.js")
 (load "common.church")
+(load "prob1_help.church")
 
-(define data (read-csv "problem-1-data.csv" ","))
 
-(define sigma1 (matrix_identity 5))
+(define realdata (read-csv "problem-1-data.csv" ","))
 
-(define mu 
-  (list (gaussian 0 2) (gaussian 0 2) 
-	(gaussian 0 2) (gaussian 0 2) (gaussian 0 2)))
+; Defining the Model
+
+(define ROWS 500)
+(define COLS 5)
+
+(define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
+
+(define mu (mvnormal (list 0 0 0 0 0) sigma1))
 
 (define sigma2 (matrix_identity 5))
+(define sigma_prior (wishart sigma2))
+(define sigma_priorInv (matrix_invert sigma_prior))
 
-(matrix_multbyScalar sigma1 2)
-(define U (wishart_std sigma2))
+(define w (mvnormal mu sigma_priorInv))
+(define tau (gamma 0.5 2))
+(define epsilon (genEpsilon ROWS tau))
+(define PHI (genData ROWS COLS))
+(define y (map (lambda (x y) (+ x y)) 
+	       (matrix_multbyVec PHI w) epsilon))
+realdata
+; We want to know the posterior on w
 
-(define sigma_prior 
-  (matrix_invert (matrix_mult (transpose U) U)))
 
-sigma_prior
 

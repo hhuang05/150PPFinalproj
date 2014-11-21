@@ -1,10 +1,26 @@
 ; Author Moses Huang
 ; Helper functions 
 
+; ***********************
+; Matrix Helper functions
+; ***********************
+
 (define (matrix_multbyScalar M y) 
   (define (multListScalar lst x)
     (map (lambda (y) (* x y)) lst))
   (map (lambda (x) (multListScalar x y)) M))
+
+(define (matrix_multbyVec M v)
+  (map (lambda (x) (vec_dot x v)) M))
+
+; **********************************
+; Probability distribution functions
+; **********************************
+
+(define (normalVec n s)
+  (if (= n 1)
+      (list (gaussian 0 s))
+      (cons (gaussian 0 s) (normalVec (- n 1) s))))
 
 (define (chi_square ddof) 
   (define (chi_sq_help n)
@@ -35,9 +51,17 @@
 					    (+ (length result) 1))))))
 		(buildWishartRow (cdr lst) 
 				 oneSeen 
-				 (append result '(0))))
-	    )
-	)
-    )
-  (map (lambda (x) (buildWishartRow x false '())) 
-       M))
+				 (append result '(0)))))))
+  (map (lambda (x) (buildWishartRow x false '())) M))
+
+(define (wishart M)
+  (define U (wishart_std M))
+  (matrix_mult (transpose U) U))
+
+(define (mvnormal mu sigma)
+  ; mvnnormal :: list -> list -> list
+  (define size (length (car sigma)))
+  (define x (normalVec size 1))
+  (define L_tran (transpose (cholesky sigma)))
+  (map (lambda (x y) (+ x y)) (matrix_multbyVec L_tran x) mu))
+

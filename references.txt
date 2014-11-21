@@ -1,1 +1,5 @@
 https://stat.duke.edu/~km68/materials/214.9%20(Wishart).pdf
+
+Notes:
+1. Seed of 9 into church program produces a condition number 907784.1057236332
+2. To generate samples from a multivariate normal distribution, we need to find matrix A such that AA' = Sigma. However, for matrices that are ill-conditioned, Cholesky's decomposition might fail
