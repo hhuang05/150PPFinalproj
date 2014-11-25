@@ -13,7 +13,16 @@ var arrayToList = typeUtils.arrayToList;
 // ******* Measures **********
 // ***************************
 
-var matrix_norminf = function(Mat) {
+var vec_twonorm = function(v) {
+    var a = listToArray(v);
+    var result = a.map(function(x) {return Math.pow(x,2)}).reduce(
+	function(a,b) {
+	    return a + b;
+	});
+    return Math.sqrt(result);
+};
+
+var matrix_infnorm = function(Mat) {
     var a = listToArray(Mat).map(listToArray);
     var b = a.map(
 	function(lst) {
@@ -26,8 +35,8 @@ var matrix_norminf = function(Mat) {
 };
 
 var matrix_cond = function(Mat) {
-    var m_norm = matrix_norminf(Mat);
-    var minv_norm = matrix_norminf(matrix_invert(Mat));
+    var m_norm = matrix_infnorm(Mat);
+    var minv_norm = matrix_infnorm(matrix_invert(Mat));
     return m_norm * minv_norm;
 };
 
