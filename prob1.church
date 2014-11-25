@@ -45,20 +45,23 @@
 
 ; What we want to know
    w  
+
 ; Conditioned on what we do know
    (condition 
-    (<= (vec_twonorm 
-	 (list (- (f w (car data_X) epsilon) 
-		  (car data_Y))))
-	1))
+    (all
+     (map (lambda (x y) 
+	    (<= (vec_twonorm (list (- (f w x epsilon) y))) 3))
+	  (take data_X 5)
+	  (take data_Y 5))
+     ))
    ))
 
 (define w_test (list 9.614536674037135 -5.14182126583269 0.08514118254273342 1.9341387033942339 -1.8357515685536785))
 (define x_test (list -1 -0.264662987086922 -0.192779619712383 -0.465299080591649 0.808410879224539))
 
 
-(vec_dot w_test x_test)
-;(sample_w (first sample_param))
+;(vec_dot w_test x_test)
+(sample_w (first sample_param))
 ;(map (lambda (x) (sample_w x)) sample_param)
 ; We want to know the posterior on w
 ; samples
