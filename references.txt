@@ -3,3 +3,19 @@ https://stat.duke.edu/~km68/materials/214.9%20(Wishart).pdf
 Notes:
 1. Seed of 9 into church program produces a condition number 907784.1057236332
 2. To generate samples from a multivariate normal distribution, we need to find matrix A such that AA' = Sigma. However, for matrices that are ill-conditioned, Cholesky's decomposition might fail
+3. Seed of 77 into church prog for 2x2 matrix produces 29246.728524478913
+
+Covariance Matrices of Sigma^{-1}
+
+Ill-conditioned : Cond Number: 29246.728524478913
+church -s 77 mvn.church
+Mean : (-1.5665487696955633 -2.0471937731185252)
+((5469.46459667343 -41.688161533352) 
+ (-41.688161533352 0.5076192378458226))
+
+Well-conditioned : Cond Number : 5.253967425933006
+church -s 1 mvn.church
+Mean: (-0.21783421854470242 0.1000162905625777)
+Cov:
+((0.38203206733371725 0.16805101846508746) 
+ (0.16805101846508744 0.22467768164720892))

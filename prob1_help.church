@@ -3,6 +3,12 @@
 
 ; TODO
 ; Can try to abstract these to make it more general
+
+(define (makeRow n f)
+    (if (= n 1)
+	(list f)
+	(cons f (makeRow (- n 1)))))
+
 (define (genData rows cols)
   (define (makeRow n)
     (if (= n 1)
@@ -12,8 +18,11 @@
       (list (makeRow cols))
       (cons (makeRow cols) (genData (- rows 1) cols))))
 
-(define (genEpsilon rows tau)
-  (if (= rows 1)
-      (list (gaussian 0 (/ 1 tau)))
-      (cons (gaussian 0 (/ 1 tau)) (genEpsilon (- rows 1) tau))))
+(define (processData data)
+  (map (lambda (x) (cdr x)) (cdr data)))
 
+(define (getXs data)
+  (map (lambda (x) (take x 5)) data))
+
+(define (getY data)
+  (map (lambda (x) (first (reverse x))) data))

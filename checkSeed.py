@@ -13,8 +13,8 @@ import argparse
 
 def main(argv):
     #cmdLineObj = includeParsing()
-    for i in xrange(120, 150):
-        cmd = "church -s " + str(i) + " prob1.church"
+    for i in xrange(0, 150):
+        cmd = "church -s " + str(i) + " mvn.church"
         tokenized = shlex.split(cmd)
         p = sp.Popen(tokenized, stdout=sp.PIPE)
         out, err = p.communicate()

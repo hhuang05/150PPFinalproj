@@ -5,29 +5,45 @@
 (load "prob1_help.church")
 
 
-(define realdata (read-csv "problem-1-data.csv" ","))
+(define realdata (processData
+		  (read-csv "problem-1-data.csv" ",")))
+(define data_X (getXs realdata))
+(define data_Y (getY realdata))
 
 ; Defining the Model
 
 (define ROWS 500)
 (define COLS 5)
 
-(define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
+(define samples
+  (mh-query 
+   1 100
+   (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
+   (define mu (mvnormal (list 0 0 0 0 0) sigma1))
+   
+   (define sigma2 (matrix_identity 5))
+   (define sigma_prior (wishart sigma2))
+   (define sigma_priorInv (matrix_invert sigma_prior))
+   
+   (define w (mvnormal mu sigma_priorInv))
+   (define tau (gamma 0.5 2))
+   (define epsilon (gaussian 0 (/ 1 tau)))
+   (define x (makeRow 5 (uniform -1 1)))
+   (define y (+ (vec_dot w x) epsilon))
 
-(define mu (mvnormal (list 0 0 0 0 0) sigma1))
+; Might this work better if we specified x and y as vector and 
+; scalar rather than as matrix and vector?
+;   (define epsilon (genEpsilon ROWS tau))
+;   (define PHI (genData ROWS COLS))
+;   (define y (map (lambda (x y) (+ x y)) 
+;		  (matrix_multbyVec PHI w) epsilon))
 
-(define sigma2 (matrix_identity 5))
-(define sigma_prior (wishart sigma2))
-(define sigma_priorInv (matrix_invert sigma_prior))
+; What we want to know
+   w
+; Conditioned on what we do know
+   (condition (equal? (car data_Y) y))
+   ))
 
-(define w (mvnormal mu sigma_priorInv))
-(define tau (gamma 0.5 2))
-(define epsilon (genEpsilon ROWS tau))
-(define PHI (genData ROWS COLS))
-(define y (map (lambda (x y) (+ x y)) 
-	       (matrix_multbyVec PHI w) epsilon))
-realdata
 ; We want to know the posterior on w
-
-
-
+; samples
+samples
