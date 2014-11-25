@@ -15,4 +15,4 @@
 
 (define (w) (mvnormal mu sigma_priorInv))
 
-mu
+(repeat 500 w)

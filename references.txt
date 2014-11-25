@@ -1,4 +1,5 @@
-https://stat.duke.edu/~km68/materials/214.9%20(Wishart).pdf
+1. https://stat.duke.edu/~km68/materials/214.9%20(Wishart).pdf
+2. Gentle, J.E. (2009). Computational Statistics. New York: Springer. pp. 315–316. doi:10.1007/978-0-387-98144-4.
 
 Notes:
 1. Seed of 9 into church program produces a condition number 907784.1057236332
@@ -10,12 +11,31 @@ Covariance Matrices of Sigma^{-1}
 Ill-conditioned : Cond Number: 29246.728524478913
 church -s 77 mvn.church
 Mean : (-1.5665487696955633 -2.0471937731185252)
+Sigma:
+((0.0004887991799850683 0.040142566816540944) 
+ (0.040142566816540944 5.2666833927664065))
+Sigma^-1
 ((5469.46459667343 -41.688161533352) 
  (-41.688161533352 0.5076192378458226))
 
 Well-conditioned : Cond Number : 5.253967425933006
 church -s 1 mvn.church
 Mean: (-0.21783421854470242 0.1000162905625777)
-Cov:
+Sigma:
+((3.9011327344649667 -2.9179103344307333) 
+ (-2.9179103344307333 6.633314856039252))
+Sigma^-1:
 ((0.38203206733371725 0.16805101846508746) 
  (0.16805101846508744 0.22467768164720892))
+
+Seeds  Cond#
+1      5.234
+92     211.218
+101    567.277
+148    952.638
+75     3288.471
+3      6586.735
+77     29246.729
+
+
+
