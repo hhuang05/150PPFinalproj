@@ -33,11 +33,11 @@ random Real ChiSquare(Integer dof) {
 };
 
 /* Define the Model */
-fixed Integer dof = 5;
-fixed RealMatrix d0 = [2;2;2;2;2];
+fixed Integer dof = 2;
+fixed RealMatrix d0 = [2;2];
 fixed RealMatrix sigma1 = diag(d0);
 
-fixed RealMatrix mu0 = [0;0;0;0;0];
+fixed RealMatrix mu0 = [0;0];
 random RealMatrix mu ~ MultivarGaussian(mu0, sigma1);
 fixed RealMatrix sigma2 = eye(dof);
 
@@ -54,17 +54,25 @@ random Real n29 ~ Gaussian(0.0, 1.0);
 random Real n30 ~ Gaussian(0.0, 1.0);
 
 /* Making U */
-random RealMatrix row1 = hstack(ChiSquare(1), n21, n22, n23, n24);
-random RealMatrix row2 = hstack(0.0, ChiSquare(2), n25, n26, n27);
+/*random RealMatrix row1 = hstack(ChiSquare(1), n21); 
+, n22, n23, n24);*/
+/*random RealMatrix row2 = hstack(0.0, ChiSquare(2)); 
+, n25, n26, n27);*/
+/*
 random RealMatrix row3 = hstack(0.0, 0.0, ChiSquare(3), n28, n29);
 random RealMatrix row4 = hstack(0.0, 0.0, 0.0, ChiSquare(4), n30);
-random RealMatrix row5 = hstack(0.0, 0.0, 0.0, 0.0, ChiSquare(5));
+random RealMatrix row5 = hstack(0.0, 0.0, 0.0, 0.0, ChiSquare(5));*/
+fixed RealMatrix row1 = hstack(0.0004887991799850683, 0.040142566816540944); 
+fixed RealMatrix row2 = hstack(0.040142566816540944, 5.2666833927664065); 
 
-random RealMatrix U = vstack(row1, row2, row3, row4, row5);
-random RealMatrix sigma_prior = transpose(U) * U;
+fixed RealMatrix U = vstack(row1, row2); /*, row3, row4, row5);*/
+fixed RealMatrix sigma_prior = U;
 
+//fixed RealMatrix sigma_prior = transpose(U) * U;
+
+fixed RealMatrix sigma_priorInv = inv(sigma_prior);
 /* Making the weight vector */
-random RealMatrix w ~ MultivarGaussian(mu, inv(sigma_prior));
+random RealMatrix w ~ MultivarGaussian(mu, sigma_priorInv);
 
 query w;
 

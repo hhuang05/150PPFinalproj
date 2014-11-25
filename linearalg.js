@@ -25,7 +25,7 @@ var matrix_norminf = function(Mat) {
     return Math.max.apply(null, b);
 };
 
-var matrix_condnum = function(Mat) {
+var matrix_cond = function(Mat) {
     var m_norm = matrix_norminf(Mat);
     var minv_norm = matrix_norminf(matrix_invert(Mat));
     return m_norm * minv_norm;

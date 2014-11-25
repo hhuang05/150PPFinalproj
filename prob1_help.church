@@ -4,10 +4,16 @@
 ; TODO
 ; Can try to abstract these to make it more general
 
-(define (makeRow n f)
+(define (delay expr)
+  (lambda() expr))
+
+(define (force promise) 
+  (promise))
+
+(define (makeRow n)
     (if (= n 1)
-	(list f)
-	(cons f (makeRow (- n 1)))))
+	(list (uniform -1 1))
+	(cons (uniform -1 1) (makeRow (- n 1)))))
 
 (define (genData rows cols)
   (define (makeRow n)
@@ -22,7 +28,8 @@
   (map (lambda (x) (cdr x)) (cdr data)))
 
 (define (getXs data)
-  (map (lambda (x) (take x 5)) data))
+  (map (lambda (x) 
+	 (map (lambda (y) (string->number y)) (take x 5))) data))
 
 (define (getY data)
-  (map (lambda (x) (first (reverse x))) data))
+  (map (lambda (x) (string->number (first (reverse x)))) data))

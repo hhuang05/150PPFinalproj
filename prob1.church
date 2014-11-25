@@ -10,13 +10,15 @@
 (define data_X (getXs realdata))
 (define data_Y (getY realdata))
 
+;(console-log (car data_X))
 ; Defining the Model
 
 (define ROWS 500)
 (define COLS 5)
 
-(define samples
-  (mh-query 
+; First we filter out the bad matrices
+(define sample_param
+  (mh-query
    1 100
    (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
    (define mu (mvnormal (list 0 0 0 0 0) sigma1))
@@ -24,26 +26,31 @@
    (define sigma2 (matrix_identity 5))
    (define sigma_prior (wishart sigma2))
    (define sigma_priorInv (matrix_invert sigma_prior))
-   
-   (define w (mvnormal mu sigma_priorInv))
-   (define tau (gamma 0.5 2))
-   (define epsilon (gaussian 0 (/ 1 tau)))
-   (define x (makeRow 5 (uniform -1 1)))
-   (define y (+ (vec_dot w x) epsilon))
 
-; Might this work better if we specified x and y as vector and 
-; scalar rather than as matrix and vector?
-;   (define epsilon (genEpsilon ROWS tau))
-;   (define PHI (genData ROWS COLS))
-;   (define y (map (lambda (x y) (+ x y)) 
-;		  (matrix_multbyVec PHI w) epsilon))
-
-; What we want to know
-   w
-; Conditioned on what we do know
-   (condition (equal? (car data_Y) y))
+   (list mu sigma_priorInv)
+  
+   (condition
+    (< (matrix_cond sigma_priorInv) 300))
    ))
 
+(define (sample_w param)
+  (mh-query 
+   1 100
+   (define w (mvnormal (first param) (second param)))
+   (define tau (gamma 0.5 2))
+   (define epsilon (gaussian 0 (/ 1 tau)))
+   (define x (cons -1 (makeRow 4)))
+   (define (f x) (+ (vec_dot w x) epsilon))
+
+; What we want to know
+   w  
+; Conditioned on what we do know
+   (condition 
+    (equal? (f (car data_X)) (car data_Y)))
+   ))
+
+(sample_w (first sample_param))
+;(map (lambda (x) (sample_w x)) sample_param)
 ; We want to know the posterior on w
 ; samples
-samples
+;samples
