@@ -13,12 +13,12 @@ import argparse
 
 def main(argv):
     #cmdLineObj = includeParsing()
-    for i in xrange(0, 150):
-        cmd = "church -s " + str(i) + " mvn.church"
+    for i in xrange(0, 40):
+        cmd = "church -t -a " + argv[1] + " prob1.church"
         tokenized = shlex.split(cmd)
         p = sp.Popen(tokenized, stdout=sp.PIPE)
         out, err = p.communicate()
-        print "seed:", i, out
+        print out
 
 
 if __name__ == '__main__':

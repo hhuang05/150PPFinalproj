@@ -27,20 +27,49 @@
    (define sigma_prior (wishart sigma2))
    (define sigma_priorInv (matrix_invert sigma_prior))
 
+   (define w (mvnormal mu sigma_priorInv))
+   (define tau (gamma 0.5 2))
+   (define epsilon (gaussian 0 (/ 1 tau)))
+   (define (f w x e) (+ (vec_dot w x) e))
+
+; What we want to know
    (list mu sigma_priorInv)
-  
-   (condition
-    (< (matrix_cond sigma_priorInv) 300))
+
+; Conditioned on what we do know
+   (condition (<= (matrix_cond sigma_priorInv) 100))
    ))
 
-(define tau (gamma 0.5 2))
-(define epsilon (gaussian 0 (/ 1 tau)))
-
 (define (sample_w param)
-  (mh-query 
+  (mh-query
    1 100
    (define w (mvnormal (first param) (second param)))
-   ;(define x (cons -1 (makeRow 4)))
+   (define tau (gamma 0.5 2))
+   (define epsilon (gaussian 0 (/ 1 tau)))
+   (define (f w x e) (+ (vec_dot w x) e))
+
+; What we want to know
+   w
+
+; Conditioned on what we do know
+   (condition 
+     (all (map (lambda (x y) 
+		 (<= (vec_twonorm (list (- (f w x epsilon) y))) 1))
+	       (take data_X 4) (take data_Y 4))))
+   ))
+
+(define modelTogether
+  (mh-query
+   1 100
+   (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
+   (define mu (mvnormal (list 0 0 0 0 0) sigma1))
+   
+   (define sigma2 (matrix_identity 5))
+   (define sigma_prior (wishart sigma2))
+   (define sigma_priorInv (matrix_invert sigma_prior))
+
+   (define w (mvnormal mu sigma_priorInv))
+   (define tau (gamma 0.5 2))
+   (define epsilon (gaussian 0 (/ 1 tau)))
    (define (f w x e) (+ (vec_dot w x) e))
 
 ; What we want to know
@@ -48,20 +77,16 @@
 
 ; Conditioned on what we do know
    (condition 
-    (all
-     (map (lambda (x y) 
-	    (<= (vec_twonorm (list (- (f w x epsilon) y))) 3))
-	  (take data_X 5)
-	  (take data_Y 5))
-     ))
+    (and
+     (all (map (lambda (x y) 
+		 (<= (vec_twonorm (list (- (f w x epsilon) y))) 1))
+	       (take data_X 4) (take data_Y 4)))
+     (< (matrix_cond sigma_priorInv) 100)))
    ))
 
-(define w_test (list 9.614536674037135 -5.14182126583269 0.08514118254273342 1.9341387033942339 -1.8357515685536785))
-(define x_test (list -1 -0.264662987086922 -0.192779619712383 -0.465299080591649 0.808410879224539))
-
-
-;(vec_dot w_test x_test)
-(sample_w (first sample_param))
+(if (equal? argstring "together")
+    modelTogether
+    (sample_w (first sample_param)))
 ;(map (lambda (x) (sample_w x)) sample_param)
 ; We want to know the posterior on w
 ; samples

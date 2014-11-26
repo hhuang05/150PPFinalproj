@@ -42,12 +42,31 @@ Experiment:
 - How does the solution change based upon different values of the
   bound and the number of data items to condition
 
-Holding Epsilon, Tau and Sigma^-1 constant, querying with MH and returning 1 sample, with lag = 100
+- Might go faster if Epsilon, Tau are not held constant
+- Sigma^-1 constant
+- Querying with MH and returning 1 sample, with lag = 100
+- 
 
-VectNorm_bound		NumToFit	Time
+VectNorm_bound		NumToFit	Avg Time
 1			1		85424ms
 2			1		10786ms
 2			2		90795ms
 2			3		97329ms
 2			10		<NA>
 3			5		
+
+
+Experiment:
+- How does changing the problem setup affect run-time?
+1. Model all mushed together
+2. Separate sampling of covariance and mu from w
+- Looking for covariance matrices whose condition number is less than or equal to 100
+- VectorNorm_bound less than or equal to 1
+- Average over 40 runs, fitting 2 data points
+
+Church
+All in ms
+	Together		Apart
+Mean	2882.725		2936.575
+Stddev	2210.250		2979.933
+
