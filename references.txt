@@ -44,18 +44,18 @@ Experiment 2:
 - How does the solution change based upon different values of the
   bound and the number of data items to condition
 - Querying with MH and returning 100 sample, with lag = 100
-- 40 iterations
+- 40 runs
 
-VectNorm_bound		NumToFit	Avg Time	Stddev
-1			1		21008.325ms	1397.859ms
-1			2		23650.150ms	3794.507ms
-1			4		350545ms
+VectNorm_bound		NumToFit	Avg Time (ms)	Stddev (ms)
+1			1		21008.325	1397.859
+1			2		23650.150	3794.507
+1			4		<>		<>
 
-1			2		23650.150ms	3794.507ms
-2			2		10786ms
-3			2
-4			2
-5			2
+1			2		23650.150	3794.507
+2			2		20970.475	1162.736
+3			2		20585.200	811.745
+4			2		20325.725	779.106
+5			2		20096.675	717.248
 
 
 Experiment 3:
