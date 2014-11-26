@@ -37,27 +37,28 @@ Seeds  Cond#
 3      6586.735
 77     29246.729
 
-Experiment: 
+Experiment 2: 
 - How long does it take to get to a solution? Can we get to a solution?
+
+  Currently no, not able to get to a sample of W's that fit all the data
 - How does the solution change based upon different values of the
   bound and the number of data items to condition
+- Querying with MH and returning 100 sample, with lag = 100
+- 40 iterations
 
-- Might go faster if Epsilon, Tau are not held constant
-- Sigma^-1 constant
-- Querying with MH and returning 1 sample, with lag = 100
-- 
-
-VectNorm_bound		NumToFit	Time
-1			1		85424ms
+VectNorm_bound		NumToFit	Avg Time	Stddev
+1			1		21008.325ms	1397.859ms
+1			2		23650.150ms	3794.507ms
 1			4		350545ms
-2			1		10786ms
-2			2		90795ms
-2			3		97329ms
-2			10		<NA>
-3			5		
+
+1			2		23650.150ms	3794.507ms
+2			2		10786ms
+3			2
+4			2
+5			2
 
 
-Experiment:
+Experiment 3:
 - How does changing the problem setup affect run-time?
 1. Model all mushed together
 2. Separate sampling of covariance and mu from w
