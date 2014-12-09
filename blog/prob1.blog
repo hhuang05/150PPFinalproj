@@ -1,0 +1,141 @@
+/* Author Moses Huang
+   Created Date: 11/10/2014 
+   Solution to PPAML Small problem 1 - Bayesian Linear regression
+
+   TODO: 
+    1. What kind of memoization is happening here?
+
+
+    Previous implementation of Wishart
+
+Reasons: Memoization of objects
+
+Generate Chi-square distribution, which is the sum of K ~ N(0,1) random numbers 
+    type NormalRV;
+random Real sample(NormalRV n) ~ UnivarGaussian(0.0, 1.0);
+
+    distinct NormalRV n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15;
+
+random Real ChiSquare(Integer dof) = {
+    if (dof == 1) then = sample(n1)
+    else if (dof == 2) then = sample(n2) + sample(n3)
+    else if (dof == 3) then = sample(n4) + sample(n5) + sample(n6)
+    else if (dof == 4) then = sample(n7) + sample(n8) + sample(n9) + sample(n10)
+    else if (dof == 5) then = sample(n11) + sample(n12) + sample(n13) + sample(n14) + sample(n15)};
+
+distinct NormalRV n21,n22,n23,n24,n25,n26,n27,n28,n29,n30;
+
+    random RealMatrix row1 = 
+    hstack(ChiSquare(5), sample(n21), sample(n22), sample(n23), sample(n24));
+random RealMatrix row2 =
+    hstack(0.0, ChiSquare(4), sample(n25), sample(n26), sample(n27));
+random RealMatrix row3 = hstack(0.0, 0.0, ChiSquare(3), sample(n28), sample(n29));
+random RealMatrix row4 = hstack(0.0, 0.0, 0.0, ChiSquare(2), sample(n30));
+random RealMatrix row5 = hstack(0.0, 0.0, 0.0, 0.0, ChiSquare(1));
+
+random RealMatrix U = vstack(row1, row2, row3, row4, row5);
+random RealMatrix sigma_prior = transpose(U) * U;
+random RealMatrix sigma_priorInv = inv(sigma_prior);
+
+*/
+
+/* Setup */
+type Target;
+
+fixed Integer dof = 5;
+fixed RealMatrix d0 = [2;2;2;2;2];
+fixed RealMatrix sigma1 = diag(d0);
+
+fixed RealMatrix mu0 = [0;0;0;0;0];
+random RealMatrix mu ~ MultivarGaussian(mu0, sigma1);
+fixed RealMatrix sigma2 = eye(dof);
+random RealMatrix sigmaPrior ~ InverseWishart(sigma2,5);
+
+/* Model */
+fixed RealMatrix w_sol = vstack(-1.731855,2.986017,2.698284,-3.591651,-3.714157);
+
+random RealMatrix w ~ MultivarGaussian(mu, sigmaPrior);
+random Real wdiffNorm ~ (transpose(w - w_sol) * (w - w_sol))[0];
+random Real tau ~ Gamma(0.5, 2);
+
+/* Data */
+fixed RealMatrix rawData = loadRealMatrix("prob1data2");
+fixed RealMatrix X = getcols(rawData, 0, 4);
+fixed RealMatrix Y = getcol(rawData, 5); 
+fixed RealMatrix diff = (X * w_sol) - Y ; 
+fixed Real sol_norm = ((transpose(diff) * diff)[0]) ^ 0.5;
+
+random RealMatrix wdiff ~ (X * w) - Y ; 
+random Real est_norm ~ ((transpose(wdiff) * wdiff)[0]) ^ 0.5;
+random Real estimate (Integer i) ~ UnivarGaussian((getrow(X,i) * w)[0], 1 / tau);
+
+/* Conditioned on data*/
+obs estimate(0) = getrow(Y,0)[0];
+obs estimate(1) = getrow(Y,1)[0];
+obs estimate(2) = getrow(Y,2)[0];
+obs estimate(3) = getrow(Y,3)[0];
+obs estimate(4) = getrow(Y,4)[0];
+obs estimate(5) = getrow(Y,5)[0];
+obs estimate(6) = getrow(Y,6)[0];
+obs estimate(7) = getrow(Y,7)[0];
+obs estimate(8) = getrow(Y,8)[0];
+obs estimate(9) = getrow(Y,9)[0];
+   
+obs estimate(10) = getrow(Y,10)[0];
+obs estimate(11) = getrow(Y,11)[0];
+obs estimate(12) = getrow(Y,12)[0];
+obs estimate(13) = getrow(Y,13)[0];
+obs estimate(14) = getrow(Y,14)[0];
+obs estimate(15) = getrow(Y,15)[0];
+obs estimate(16) = getrow(Y,16)[0];
+obs estimate(17) = getrow(Y,17)[0];
+obs estimate(18) = getrow(Y,18)[0];
+obs estimate(19) = getrow(Y,19)[0];
+
+obs estimate(20) = getrow(Y,20)[0];
+obs estimate(21) = getrow(Y,21)[0];
+obs estimate(22) = getrow(Y,22)[0];
+obs estimate(23) = getrow(Y,23)[0];
+obs estimate(24) = getrow(Y,24)[0];
+obs estimate(25) = getrow(Y,25)[0];
+obs estimate(26) = getrow(Y,26)[0];
+obs estimate(27) = getrow(Y,27)[0];
+obs estimate(28) = getrow(Y,28)[0];
+obs estimate(29) = getrow(Y,29)[0];
+
+obs estimate(30) = getrow(Y,30)[0];
+obs estimate(31) = getrow(Y,31)[0];
+obs estimate(32) = getrow(Y,32)[0];
+obs estimate(33) = getrow(Y,33)[0];
+obs estimate(34) = getrow(Y,34)[0];
+obs estimate(35) = getrow(Y,35)[0];
+obs estimate(36) = getrow(Y,36)[0];
+obs estimate(37) = getrow(Y,37)[0];
+obs estimate(38) = getrow(Y,38)[0];
+obs estimate(39) = getrow(Y,39)[0];
+
+obs estimate(40) = getrow(Y,40)[0];
+obs estimate(41) = getrow(Y,41)[0];
+obs estimate(42) = getrow(Y,42)[0];
+obs estimate(43) = getrow(Y,43)[0];
+obs estimate(44) = getrow(Y,44)[0];
+obs estimate(45) = getrow(Y,45)[0];
+obs estimate(46) = getrow(Y,46)[0];
+obs estimate(47) = getrow(Y,47)[0];
+obs estimate(48) = getrow(Y,48)[0];
+obs estimate(49) = getrow(Y,49)[0];
+
+obs estimate(50) = getrow(Y,50)[0];
+obs estimate(51) = getrow(Y,51)[0];
+obs estimate(52) = getrow(Y,52)[0];
+obs estimate(53) = getrow(Y,53)[0];
+obs estimate(54) = getrow(Y,54)[0];
+obs estimate(55) = getrow(Y,55)[0];
+obs estimate(56) = getrow(Y,56)[0];
+obs estimate(57) = getrow(Y,57)[0];
+obs estimate(58) = getrow(Y,58)[0];
+obs estimate(59) = getrow(Y,59)[0];
+
+query wdiffNorm;
+
+/* Provide Evidence */

@@ -1,0 +1,57 @@
+; Author: Moses Huang
+; Problem 1: Linear Regression
+(load "linearalg.js")
+(load "common.church")
+(load "prob1_help.church")
+
+
+(define realdata (processData
+		  (read-csv "problem-1-data.csv" ",")))
+
+(define dataLength (string->number argstring))
+(define data (take (getXs realdata) dataLength))
+(define targets (take (getY realdata) dataLength))
+
+; Defining the Model
+
+(define ROWS 500)
+(define COLS 5)
+
+(define (error a b) (vec_twonorm (vec_minus a b)))
+   
+
+(define (sample_w)
+  (mh-query
+   10 100
+   (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
+   (define mu (mvnormal (list 0 0 0 0 0) sigma1))   
+   (define sigma2 (matrix_identity 5))
+   (define sigma_prior (wishart sigma2))
+   (define sigma_priorInv (matrix_invert sigma_prior))
+   (define tau (gamma 0.5 2))   
+   (define (epsilon) (gaussian 0 (/ 1 tau)))
+   (define noise (repeat dataLength epsilon))
+   (define w (mvnormal mu sigma_priorInv))
+   (define estimate 
+     (map (lambda (x z) (gaussian (vec_dot x w) z))
+		  data noise))
+     
+; What we want to know
+   (list w (error estimate targets))
+
+; Conditioned on what we do know
+   (condition
+     (<= (error estimate targets) 1000))
+;   (condition 
+;   (and (<= error 300) (< (matrix_cond sigma_priorInv) 100)))
+   ))
+
+; 
+(sample_w)
+;(define w1 (car (sample_w (string->number argstring))))
+
+;(console-log (length w1))
+;(console-log (matrix_shape allData))
+;(vec_twonorm (matrix_multbyVec allData w1))
+;(repeat 10 epsilon)
+

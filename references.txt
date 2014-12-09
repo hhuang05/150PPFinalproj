@@ -72,3 +72,8 @@ All in ms
 Mean	2882.725		2936.575
 Stddev	2210.250		2979.933
 
+Experiment: What does conditioning on condition number actually do for you?
+- Probably need two norm here, but then what if you used infnorm
+
+BLOG
+* Impossible to include observations in data files, have to include it in the model file

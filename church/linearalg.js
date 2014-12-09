@@ -51,6 +51,30 @@ var vec_dot = function(v1,v2) {
     return numlib.matrix.dotproduct(a,b);
 };
 
+var vec_plus = function(v1,v2) {
+    var a = listToArray(v1);
+    var b = listToArray(v2);
+    var c = [];
+
+    for (var i = 0; i < a.length; i++) {
+	c.push(a[i] + b[i]);
+    }
+    
+    return arrayToList(c);
+};
+
+var vec_minus = function(v1,v2) {
+    var a = listToArray(v1);
+    var b = listToArray(v2);
+    var c = [];
+
+    for (var i = 0; i < a.length; i++) {
+	c.push(a[i] - b[i]);
+    }
+    
+    return arrayToList(c);
+};
+
 // *************************
 // ******* Matrix **********
 // *************************

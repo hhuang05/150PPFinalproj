@@ -3,13 +3,6 @@
 
 ; TODO
 ; Can try to abstract these to make it more general
-
-(define (delay expr)
-  (lambda() expr))
-
-(define (force promise) 
-  (promise))
-
 (define (makeRow n)
     (if (= n 1)
 	(list (uniform -1 1))

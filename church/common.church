@@ -4,6 +4,8 @@
 ; ***********************
 ; Matrix Helper functions
 ; ***********************
+(define (matrix_shape M)
+  (list (length M) (length (car M))))
 
 (define (matrix_multbyScalar M y) 
   (define (multListScalar lst x)
