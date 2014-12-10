@@ -42,8 +42,12 @@
 ; Conditioned on what we do know
    (condition
     (all
-     (map (lambda (x y z) (equal? (gaussian (vec_dot x w) z) y))
-		  data targets noise)))
+     (and
+      (map (lambda (x y z) (equal? (gaussian (vec_dot x w) z) y))
+	   data targets noise)
+      (<= (matrix_cond sigma_prior) 100))
+     ))
+    
    ))
 
 ; 
