@@ -22,31 +22,26 @@
 
 (define (sample_w)
   (mh-query
-   1000 100
+   100 100
    (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
    (define mu (mvnormal (list 0 0 0 0 0) sigma1))   
    (define sigma2 (matrix_identity 5))
    (define sigma_prior (wishart sigma2))
    (define sigma_priorInv (matrix_invert sigma_prior))
    (define tau (gamma 0.5 2))   
-   (define (epsilon) (gaussian 0 (/ 1 tau)))
-   (define noise (repeat dataLength epsilon))
    (define w (mvnormal mu sigma_priorInv))
-   (define estimate 
-     (map (lambda (x z) (gaussian (vec_dot x w) z))
-		  data noise))
-     
+   (define (estTarget A)
+     (map (lambda (x) (gaussian (vec_dot x w) (/ 1 tau))) A))
+
 ; What we want to know
-   (list w (error estimate targets))
+   w
 
 ; Conditioned on what we do know
    (condition
-    (all
-     (and
-      (map (lambda (x y z) (equal? (gaussian (vec_dot x w) z) y))
-	   data targets noise)
-      (<= (matrix_cond sigma_prior) 100))
-     ))
+    (and
+     (all
+      (map (lambda (x y) (<= (abs (- x y)) 50)) (estTarget data) targets))
+     (<= (matrix_cond sigma_prior) 100)))
     
    ))
 
