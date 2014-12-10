@@ -22,7 +22,7 @@
 
 (define (sample_w)
   (mh-query
-   10 100
+   1000 100
    (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
    (define mu (mvnormal (list 0 0 0 0 0) sigma1))   
    (define sigma2 (matrix_identity 5))
@@ -41,9 +41,9 @@
 
 ; Conditioned on what we do know
    (condition
-     (<= (error estimate targets) 1000))
-;   (condition 
-;   (and (<= error 300) (< (matrix_cond sigma_priorInv) 100)))
+    (all
+     (map (lambda (x y z) (equal? (gaussian (vec_dot x w) z) y))
+		  data targets noise)))
    ))
 
 ; 
