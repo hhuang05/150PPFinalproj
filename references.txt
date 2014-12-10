@@ -76,4 +76,7 @@ Experiment: What does conditioning on condition number actually do for you?
 - Probably need two norm here, but then what if you used infnorm
 
 BLOG
-* Impossible to include observations in data files, have to include it in the model file
+
+SOLUTION:
+w = [-1.731855,2.986017,2.698284,-3.591651,-3.714157]
+Least sq solution ||Xw - Y|| = 232.421

@@ -21,8 +21,8 @@
    
 
 (define (sample_w)
-  (mh-query
-   100 100
+  (rejection-query
+   ;100 100
    (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
    (define mu (mvnormal (list 0 0 0 0 0) sigma1))   
    (define sigma2 (matrix_identity 5))
@@ -41,16 +41,10 @@
     (and
      (all
       (map (lambda (x y) (<= (abs (- x y)) 50)) (estTarget data) targets))
-     (<= (matrix_cond sigma_prior) 100)))
+     ))
     
    ))
 
-; 
-(sample_w)
-;(define w1 (car (sample_w (string->number argstring))))
-
-;(console-log (length w1))
-;(console-log (matrix_shape allData))
-;(vec_twonorm (matrix_multbyVec allData w1))
-;(repeat 10 epsilon)
-
+(define results (repeat 1000 sample_w))
+(write-csv results "Church_results" ",")
+; (<= (matrix_cond sigma_prior) 100)
