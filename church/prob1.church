@@ -1,5 +1,12 @@
 ; Author: Moses Huang
 ; Problem 1: Linear Regression
+; Usage: This program assumes that the data file is in the same directory
+;        and takes an input argument on command line, which specifies
+;        how many data points to give to the model for evidence. 
+;
+; To execute, run the following on cmdline:
+;   church -a 500 prob1.church
+
 (load "linearalg.js")
 (load "common.church")
 (load "prob1_help.church")
@@ -21,8 +28,8 @@
    
 
 (define (sample_w)
-  (rejection-query
-   ;100 100
+  (mh-query
+   1000 100
    (define sigma1 (matrix_multbyScalar (matrix_identity 5) 2))
    (define mu (mvnormal (list 0 0 0 0 0) sigma1))   
    (define sigma2 (matrix_identity 5))
@@ -39,12 +46,10 @@
 ; Conditioned on what we do know
    (condition
     (and
-     (all
-      (map (lambda (x y) (<= (abs (- x y)) 50)) (estTarget data) targets))
+     (<= (pow (vec_twonorm (estTarget data) targets) 2) 350)
+     (<= (matrix_cond sigma_prior) 100)
      ))
     
    ))
 
-(define results (repeat 1000 sample_w))
-(write-csv results "Church_results" ",")
-; (<= (matrix_cond sigma_prior) 100)
+(write-csv (sample_w) "Church_results" ",")
