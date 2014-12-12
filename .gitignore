@@ -1,3 +1,10 @@
 *.*~
 *.csv
 *~
+blog/constrained/
+blog/unconstrained/
+blog/*.py
+figures/
+church/*.py
+exp/
+mvndata/

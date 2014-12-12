@@ -1,28 +1,51 @@
 /* Author Moses Huang
-   Created Date: 11/20/2014 
+   Created Date: 11/10/2014 
    Solution to PPAML Small problem 1 - Bayesian Linear regression
-   For BLOG developement version
+   For BLOG 0.8 release
 */
 
-/* Setup */
+
+/* Implementing Chi-Square*/ 
+
+type NormalRV;
+random Real sample(NormalRV n) = Gaussian(0.0, 1.0);
+distinct NormalRV n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15;
+
+random Real ChiSquare(Integer dof) = {
+    if (dof == 1) then = sample(n1)
+    else if (dof == 2) then = sample(n2) + sample(n3)
+    else if (dof == 3) then = sample(n4) + sample(n5) + sample(n6)
+    else if (dof == 4) then = sample(n7) + sample(n8) + sample(n9) + sample(n10)
+    else if (dof == 5) then = sample(n11) + sample(n12) + sample(n13) + sample(n14) + sample(n15)};
+
+/* Implementing a Wishart*/ 
+distinct NormalRV n21,n22,n23,n24,n25,n26,n27,n28,n29,n30;
+
+random RealMatrix row1 = hstack(ChiSquare(5), sample(n21), sample(n22), sample(n23), sample(n24));
+random RealMatrix row2 = hstack(0.0, ChiSquare(4), sample(n25), sample(n26), sample(n27));
+random RealMatrix row3 = hstack(0.0, 0.0, ChiSquare(3), sample(n28), sample(n29));
+random RealMatrix row4 = hstack(0.0, 0.0, 0.0, ChiSquare(2), sample(n30));
+random RealMatrix row5 = hstack(0.0, 0.0, 0.0, 0.0, ChiSquare(1));
+
+random RealMatrix U = vstack(row1, row2, row3, row4, row5);
+random RealMatrix sigma_prior = transpose(U) * U;
+random RealMatrix sigma_priorInv = inv(sigma_prior);
+
+/* Model */
 fixed Integer dof = 5;
 fixed RealMatrix d0 = [2;2;2;2;2];
 fixed RealMatrix sigma1 = diag(d0);
 
 fixed RealMatrix mu0 = [0;0;0;0;0];
-random RealMatrix mu ~ MultivarGaussian(mu0, sigma1);
-fixed RealMatrix sigma2 = eye(dof);
-random RealMatrix sigmaPrior ~ InverseWishart(sigma2,5);
-
-/* Model */
-random RealMatrix w ~ MultivarGaussian(mu, sigmaPrior);
-random Real tau ~ Gamma(0.5, 2);
+random RealMatrix mu = MultivarGaussian(mu0, sigma1);
+random RealMatrix w = MultivarGaussian(mu, sigma_priorInv);
+random Real tau = Gamma(0.5, 2);
 
 /* Data */
 fixed RealMatrix rawData = loadRealMatrix("prob1data2");
 fixed RealMatrix data = getcols(rawData, 0, 4);
 fixed RealMatrix targets = getcol(rawData, 5); 
-random Real estimate (Integer i) ~ UnivarGaussian((getrow(data,i) * w)[0], 1 / tau);
+random Real estimate (Integer i) = UnivarGaussian((getrow(data,i) * w)[0], 1 / tau);
 
 /* Provide Evidence */
 obs estimate(0) = getrow(targets,0)[0];
@@ -528,5 +551,3 @@ obs estimate(499) = getrow(targets,499)[0];
 
 /*Query*/
 query w;
-
-
