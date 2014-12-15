@@ -1,24 +1,27 @@
 /* Author Moses Huang
    Created Date: 11/10/2014 
    Solution to PPAML Small problem 1 - Bayesian Linear regression
-   For BLOG 0.8 release
+   For BLOG 0.8 release, loadRealMatrix not working
+
+   To run: blog -n 100000 prob1_v08.blog
 */
 
 
 /* Implementing Chi-Square*/ 
 
 type NormalRV;
-random Real sample(NormalRV n) = Gaussian(0.0, 1.0);
+random Real sample(NormalRV n) ~ Gaussian(0, 1);
 distinct NormalRV n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15;
 
-random Real ChiSquare(Integer dof) = {
+random Real ChiSquare(Integer dof) {
     if (dof == 1) then = sample(n1)
     else if (dof == 2) then = sample(n2) + sample(n3)
     else if (dof == 3) then = sample(n4) + sample(n5) + sample(n6)
     else if (dof == 4) then = sample(n7) + sample(n8) + sample(n9) + sample(n10)
-    else if (dof == 5) then = sample(n11) + sample(n12) + sample(n13) + sample(n14) + sample(n15)};
+    else if (dof == 5) then = sample(n11) + sample(n12) + sample(n13) + sample(n14) + sample(n15)
+};
 
-/* Implementing a Wishart*/ 
+/* Implementing a Wishart*/
 distinct NormalRV n21,n22,n23,n24,n25,n26,n27,n28,n29,n30;
 
 random RealMatrix row1 = hstack(ChiSquare(5), sample(n21), sample(n22), sample(n23), sample(n24));
@@ -37,15 +40,15 @@ fixed RealMatrix d0 = [2;2;2;2;2];
 fixed RealMatrix sigma1 = diag(d0);
 
 fixed RealMatrix mu0 = [0;0;0;0;0];
-random RealMatrix mu = MultivarGaussian(mu0, sigma1);
-random RealMatrix w = MultivarGaussian(mu, sigma_priorInv);
-random Real tau = Gamma(0.5, 2);
+random RealMatrix mu ~ MultivarGaussian(mu0, sigma1);
+random RealMatrix w ~ MultivarGaussian(mu, sigma_priorInv);
+random Real tau ~ Gamma(0.5, 2);
 
 /* Data */
 fixed RealMatrix rawData = loadRealMatrix("prob1data2");
 fixed RealMatrix data = getcols(rawData, 0, 4);
 fixed RealMatrix targets = getcol(rawData, 5); 
-random Real estimate (Integer i) = UnivarGaussian((getrow(data,i) * w)[0], 1 / tau);
+random Real estimate (Integer i) ~ Gaussian((getrow(data,i) * w)[0], 1 / tau);
 
 /* Provide Evidence */
 obs estimate(0) = getrow(targets,0)[0];

@@ -18,8 +18,5 @@ After the git repositories have been updated, you will need to follow the instru
 Once Church has been setup, please cd into the Church directory and run the following comand to install numbers.js
 
      npm install numbers
-	  
-- BLOG Release version: 0.8: 
-  https://sites.google.com/site/bloginference/download/blog-0.8-bin.zip?attredirects=0
 
 
