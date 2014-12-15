@@ -10,5 +10,4 @@ BLOG:
 - Release version: 0.8: 
   https://sites.google.com/site/bloginference/download/blog-0.8-bin.zip?attredirects=0
 
-- Development version: 
-  Fork from dev version: 
+- Fork from dev version:   https://github.com/hhuang05/blog
