@@ -1,10 +1,9 @@
-Comp 150PP - Probabilistic Programming Langugages Final Project
+Comp 150PP - Probabilistic Programming Languages Final Project (Fall 2014)
 ==============
 
 Comparing solutions and programming language features for Church, Blog
 
-The development versions of BLOG and Church have been added as submodules of this project
-BLOG. Run the following command after you clone this project:
+The development versions of BLOG and Church have been added as submodules of this project. Please run the following command after you clone this project:
 
       git submodule init
       git submodule update
