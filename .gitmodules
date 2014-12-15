@@ -1,0 +1,6 @@
+[submodule "blog_dev"]
+	path = blog_dev
+	url = https://github.com/hhuang05/blog.git
+[submodule "church_dev"]
+	path = church_dev
+	url = https://github.com/probmods/webchurch.git
