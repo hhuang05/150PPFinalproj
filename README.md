@@ -1,6 +1,14 @@
-150PPFinalproj
+Comp 150PP - Probabilistic Programming Langugages Final Project
 ==============
 
-Final project for Probabilistic Prog Languages
+Comparing solutions and programming language features for Church, Blog
 
-Comparing solutions and programming language features for Church, Blog and Anglican.
+Church:
+- Git repo: https://github.com/probmods/webchurch
+
+BLOG:
+- Release version: 0.8: 
+  https://sites.google.com/site/bloginference/download/blog-0.8-bin.zip?attredirects=0
+
+- Development version: 
+  Fork from dev version: 
